@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
-import {getDocs, collection, deleteDoc, updateDoc, doc, onSnapshot} from 'firebase/firestore';
+import {getDocs, collection, deleteDoc, doc, onSnapshot} from 'firebase/firestore';
 import {db} from '../firebase/config'
 import { useEffect,useState } from 'react';
 import DeleteIcon from '../assets/delete.svg';
 import EditIcon from '../assets/edit.svg';
-import FormEditArticle from '../pages/FormEditArticle'
+
 
 // styles
 import './Home.css'
@@ -45,15 +45,6 @@ export default function Home() {
     );
   }
 
-  const handleEdit = async (id) => {
-    const ref = doc(db, 'articles', id)
-    
-      //loading = true
-    updateDoc(ref).then(
-        //loading false;
-    );
-  }
-
   return (
     <div className="home">
       <h2>Articles</h2>      
@@ -64,7 +55,6 @@ export default function Home() {
           <Link to={`/articles/${article.id}`}>Read More...</Link>
           <Link to={`/newEdit/${article.id}`}><img 
             className="icon"
-            // onClick={() => handleEdit(article.id)}
             src={EditIcon} alt="delete icon" 
           /></Link>
           <img 

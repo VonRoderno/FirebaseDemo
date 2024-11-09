@@ -1,11 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import {getDoc, doc} from 'firebase/firestore';
 import {db} from '../firebase/config'
 import { useEffect,useState } from 'react';
+import EditIcon from '../assets/edit.svg';
 
 export default function Article() {
   const { urlId } = useParams()
-  const navigate = useNavigate()
 
   console.log("id: " + urlId)
 
@@ -21,12 +21,6 @@ export default function Article() {
   },[])  
   
 
-  // if (!article) {
-  //   setTimeout(() => {
-  //     navigate('/')
-  //   }, 2000)
-  // }
-
   return (
     <div>
       {!article && <p>No records found!</p>}
@@ -35,6 +29,10 @@ export default function Article() {
           <h2>{article.title}</h2>
           <p>By {article.author}</p>
           <p>{article.description}</p>
+          <Link to={`/newEdit/${urlId}`}><img 
+            className="icon"
+            src={EditIcon} alt="delete icon" 
+          /></Link>
         </div>
       )}
     </div>

@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
-import {getDocs, collection, deleteDoc, doc, onSnapshot} from 'firebase/firestore';
+import {getDocs, collection, deleteDoc, updateDoc, doc, onSnapshot} from 'firebase/firestore';
 import {db} from '../firebase/config'
 import { useEffect,useState } from 'react';
-import DeleteIcon from '../assets/delete.svg'
+import DeleteIcon from '../assets/delete.svg';
+import EditIcon from '../assets/edit.svg';
+import FormEditArticle from '../pages/FormEditArticle'
 
 // styles
 import './Home.css'
@@ -18,7 +20,7 @@ export default function Home() {
         console.log(snapshot);
         let results = []
          snapshot.docs.forEach(doc => {
-           results.push({id: doc.id, ...doc.data()});
+           results.push({id: doc.id, ...doc.data().id});
          });
         setArticles(results);
       })
@@ -38,7 +40,16 @@ export default function Home() {
   const handleDelete = async (id) => {
     const ref = doc(db, 'articles', id)
       //loading = true
-    deleteDoc(ref).then(
+    await deleteDoc(ref).then(
+        //loading false;
+    );
+  }
+
+  const handleEdit = async (id) => {
+    const ref = doc(db, 'articles', id)
+    
+      //loading = true
+    updateDoc(ref).then(
         //loading false;
     );
   }
@@ -51,6 +62,11 @@ export default function Home() {
           <h3>{article.title}</h3>
           <p>Written by {article.author}</p>
           <Link to={`/articles/${article.id}`}>Read More...</Link>
+          <Link to={`/newEdit/${article.id}`}><img 
+            className="icon"
+            // onClick={() => handleEdit(article.id)}
+            src={EditIcon} alt="delete icon" 
+          /></Link>
           <img 
             className="icon"
             onClick={() => handleDelete(article.id)}

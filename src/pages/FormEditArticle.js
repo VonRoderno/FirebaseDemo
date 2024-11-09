@@ -1,40 +1,53 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect} from 'react'
+import { useParams } from "react-router-dom"
 import { useNavigate } from 'react-router-dom'
-import {collection, addDoc} from 'firebase/firestore';
+import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import {db} from '../firebase/config'
 // styles
 import './create.css'
 
-export default function Create() {  
-  // const [title, setTitle] = useState('')
-  // const [author, setAuthor] = useState('')
-  // const [description, setDescription] = useState('')
+export default function Edit() {  
+
+  const { articleId } = useParams();
+
+
   const title = useRef(null);
   const author = useRef(null);
   const description = useRef(null);
   
+  console.log("id: " + articleId)
+
   const navigate = useNavigate()
   
+  useEffect(() => {
+    const ref = doc(db, 'articles', articleId);
+    getDoc(ref)
+      .then((snapshot)=>{        
+        console.log("snapshot.data()")
+        console.log(snapshot.data())
+ 
+        title.current.value = snapshot.data().title;
+        author.current.value = snapshot.data().author;
+        description.current.value = snapshot.data().description;
+      })
+
+  },[])
 
   const handleSubmit = async (e) => {
     e.preventDefault()   
     const article = {
-      title: title.cuurent.value,
+      title: title.current.value,
       author: author.current.value,
       description: description.current.value};
-    const ref = collection(db, 'articles')
-    await addDoc(ref,article)
-
-    // setTitle("");
-    // setAuthor("");
-    // setDescription("");
+      const ref = doc(db, 'articles', articleId);
+    await updateDoc(ref,article)
 
     navigate('/')
   }
 
   return (
     <div className="create">
-      <h2 className="page-title">Add an Article</h2>
+      <h2 className="page-title">Edit Article</h2>
       <form onSubmit={handleSubmit}>
 
         <label>
